@@ -1,0 +1,261 @@
+body {
+  background-color: #e4e4e4;
+}
+
+.header-box {
+  background-color: #D4D4D4;
+  width: 100%;
+  height: 60px;
+}
+
+.header-text {
+  text-align: center;
+  padding-top: 5%;
+  font-size: 130%;
+  font-weight: 550;
+}
+
+.conference-box {
+  display: flex;
+  margin-top: 7%;
+  background-color: #D4D4D4;
+  width: 100%;
+  height: 80px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.user-image {
+  margin-left: 4%;
+  margin-top: 2%;
+  height: 80%;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.conference-name {
+  margin-top: 1%;
+  margin-left: 2%;
+  font-size: 120%;
+}
+
+.conference-admin {
+  font-size: 13px;
+  position: absolute;
+  margin-left: 23%;
+  margin-top: 10%;
+}
+
+.Navbar {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  -ms-user-select: none; 
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	user-select: none; 
+}
+
+.nav-bar-btn-box {
+  position: fixed;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  bottom: 0;
+  margin-bottom: 3%;
+  background-color: #FFFFFF;
+  width: 80%;
+  height: 80px;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.button-box {
+  text-align: center;
+  margin-left: 4%;
+  margin-right: 4%;
+  display: block;
+}
+
+.btn-description {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.icon-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 0;
+    }
+
+.icon {
+      margin-top: 8px;
+        width: 40px;
+        height: 40px;
+        border: none;
+        
+}
+
+.conferences {
+  background-color: #FFFFFF;
+  background-image: url(https://raw.githubusercontent.com/PrintHiEgProg/printhiegprog.github.io/main/education-platform/free-icon-font-users-alt-5529124.webp);
+  background-size: cover;
+}
+
+.articles {
+  background-color: #FFFFFF;
+  background-image: url(https://raw.githubusercontent.com/PrintHiEgProg/printhiegprog.github.io/main/education-platform/free-icon-font-graduation-cap-3914115.webp);
+  background-size: cover;
+}
+
+.notes {
+  background-color: #FFFFFF;
+  background-image: url(https://raw.githubusercontent.com/PrintHiEgProg/printhiegprog.github.io/main/education-platform/free-icon-font-pencil-3917457.webp);
+  background-size: cover;
+}
+
+.profile {
+  background-color: #FFFFFF;
+  background-image: url(https://raw.githubusercontent.com/PrintHiEgProg/printhiegprog.github.io/main/education-platform/free-icon-font-user-3917711.webp);
+  background-size: cover;
+}
+
+.icon-description {
+  text-align: center;
+  font-size: 11px;
+}
+
+.join-btn {
+  position: absolute;
+  font-weight: 550;
+  margin-top: 10%;
+  margin-left: 75%;
+  text-align: center;
+  background-color: #9E9E9E;
+  width: 22%;
+  height: 30px;
+  color: #FFFFFF;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.join-text {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.article-image {
+  margin-left: 4%;
+  margin-top: 2%;
+  height: 80%;
+}
+
+.reg-login-container {
+  margin-top: 20%;
+  display: block;
+}
+
+.label-for-form {
+  margin-top: 20px;
+  font-size: 120%;
+  margin-left: 15%;
+}
+
+.input-for-form {
+  background-color: #F5F5F5;
+  border-color: #000000;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 20px;
+  width: 70%;
+  height: 40px;
+  margin-left: 15%;
+  margin-right: 10%;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+
+.create-conference-btn {
+  font-weight: 550;
+  position: fixed;
+  margin-left: 35%;
+  bottom: 0;
+  margin-bottom: 100px;
+  background-color: #D9D9D9;
+  width: 30%;
+  height: 35px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.create-conference-btn-helper {
+  text-align: center;
+}
+
+.create-conference-btn-text {
+  margin-top: 5%;
+}
+
+.chat-box {
+  text-align: center;
+  position: absolute;
+  right: 0;
+  margin-top: 50px;
+  width: 60px;
+  height: 60px;
+  background-color: #D4D4D4;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+}
+
+.chat-icon {
+  margin-left: 10px;
+  margin-top: 12px;
+  width: 40px;
+  height: 40px;
+  background-image: url(https://raw.githubusercontent.com/PrintHiEgProg/printhiegprog.github.io/main/education-platform/chat-message.webp);
+  background-size: cover;
+}
+
+.title-modal {
+  text-align: center;
+}
+
+.modal-close {
+  font-weight: 550;
+  font-size: 150%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 20%;
+  margin-right: 5%;
+}
+
+.modal-conference {
+  width: 100%;
+  height: 85vh;
+  background-color: #e4e4e4;
+}
