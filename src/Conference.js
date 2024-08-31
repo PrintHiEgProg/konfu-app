@@ -5,9 +5,7 @@ import axios from "axios";
 import io from "socket.io-client";
 import "./App.css";
 
-const socket = io(
-  "http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001"
-);
+const socket = io("https://printhiegprog-conference-app-backend-b2bd.twc1.net");
 
 const Conference = () => {
   const navigate = useNavigate()
@@ -44,7 +42,7 @@ const Conference = () => {
     const roomID = v4();
     // Отправляем запрос на сервер для создания комнаты
     fetch(
-      "http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001/create-conference",
+      "https://printhiegprog-conference-app-backend-b2bd.twc1.net/create-conference",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

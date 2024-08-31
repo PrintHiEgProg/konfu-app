@@ -4,9 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import "./App.css";
 
-const socket = io(
-  "http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001"
-); 
+const socket = io("https://printhiegprog-conference-app-backend-b2bd.twc1.net"); 
 
 const Room = () => {
     const [conferences, setConferences] = useState({});
@@ -63,7 +61,7 @@ const Room = () => {
       if (typeUser) {
         // Отправляем запрос на сервер для удаления конференции
         fetch(
-          `http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001/delete-conference/${roomID}`,
+          `https://printhiegprog-conference-app-backend-b2bd.twc1.net/delete-conference/${roomID}`,
           {
             method: "DELETE",
           }
