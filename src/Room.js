@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, {
+    useState, useEffect, useRef} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import "./App.css";
@@ -6,13 +7,22 @@ import "./App.css";
 const socket = io("http://localhost:3001"); 
 
 const Room = () => {
-
+    const [conferences, setConferences] = useState({});
+    const [stream, setStream] = useState(null);
     const { roomID } = useParams();
     const navigate = useNavigate()
     const [showModal, setShowModal] = useState(false);
-    
+    const [localStream, setLocalStream] = useState(null);
+    const [remoteStream, setRemoteStream] = useState(null);
+    const [pc, setPC] = useState(null);
+    const [typeUser, setTypeUser] = localStorage.getItem("typeUser");
     const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const canvasRef = useRef(null);
+  
+    
+
+    //Chat part
 
     useEffect(() => {
       socket.emit("joinRoom", { roomID });
@@ -47,13 +57,42 @@ const Room = () => {
       setShowModal(false);
     };
     
-    
+    const handleLeaveConference = (roomID) => {
+      if (typeUser) {
+        // Отправляем запрос на сервер для удаления конференции
+        fetch(`http://localhost:3001/delete-conference/${roomID}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Удаляем конференцию из списка
+            setConferences((prevConferences) => {
+              const newConferences = { ...prevConferences };
+              delete newConferences[roomID];
+              return newConferences;
+            });
+              navigate("/")
+          })
+          .catch((error) => console.error(error));
+      } else {
+        navigate("/")
+      }
+    };
+
+
   return (
     <div className="Room">
       <div className="header-box">
         <div className="header-text">Конференция</div>
       </div>
-      <div>{!showModal && <button onClick={GoToBack}>Выйти</button>}</div>
+      <div>
+        {!showModal && (
+          <button onClick={() => handleLeaveConference(roomID)}>Выйти</button>
+        )}
+      </div>
+      <div>
+        
+      </div>
       {!showModal && (
         <div className="chat-box" onClick={handleModalChat}>
           <div className="chat-icon"></div>
@@ -92,3 +131,4 @@ const Room = () => {
 };
 
 export default Room;
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +17,7 @@ import Profile from "./Profile.js"
 import Room from "./Room.js"
 import NotFound404 from "./NotFound404.js"
 import Chat from "./Chat.js";
+import AudioStream from "./AudioStream.js";
 import socketIO from "socket.io-client";
 
 const socket = socketIO.connect("http://localhost:3001");
@@ -30,16 +31,23 @@ function App() {
     const savedUsername = localStorage.getItem("username");
     return savedUsername !== null ? savedUsername : "Неизвестный пользователь";
   });
+  const [typeUser, setTypeUser] = useState(() => {
+    const savedUsername = localStorage.getItem("typeUser");
+    return savedUsername !== null ? savedUsername : false;
+  });
   
+  
+
   useEffect(() => {
     localStorage.setItem("username", username)
+    localStorage.setItem("typeUser", typeUser)
   }, [username])
 
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/chat/:roomID" element={<Chat />} />
+          <Route path="/room-audio/:roomId" element={<AudioStream />} />
           <Route path="/room/:roomID" element={<Room />} />
           <Route exact path="/" element={<Conference />} />
           <Route path="/articles" element={<Article />} />

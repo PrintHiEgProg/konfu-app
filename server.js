@@ -7,8 +7,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   },
@@ -18,11 +18,36 @@ app.use(cors());
 app.use(express.json());
 
 const rooms = {};
+const conferences = {};
+
+
+app.post("/create-conference", (req, res) => {
+  const { roomID, conferenceName } = req.body;
+  conferences[roomID] = { name: conferenceName, admin: "Имя администратора" };
+  io.emit("new-conference", { roomID, conferenceName });
+  res.json({ message: "Конференция создана" });
+});
+
+// Обработка удаления конференции
+app.delete('/delete-conference/:roomID', (req, res) => {
+  const roomID = req.params.roomID;
+  if (conferences[roomID]) {
+    delete conferences[roomID];
+    io.emit('delete-conference', roomID);
+    res.json({ message: 'Конференция удалена' });
+  } else {
+    res.status(404).json({ message: 'Конференция не найдена' });
+  }
+});
 
 // Обработка подключения клиента
 io.on("connection", (socket) => {
   console.log("New client connected");
+  socket.emit("conferences", conferences);
 
+       
+
+  //Chat  
   // Присоединение к комнате
   socket.on("joinRoom", ({ roomID }) => {
     socket.join(roomID);
@@ -44,6 +69,9 @@ io.on("connection", (socket) => {
     console.log("Client disconnected");
   });
 });
+
+
+
 
 // Запуск сервера
 const PORT = process.env.PORT || 3001;

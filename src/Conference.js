@@ -2,53 +2,57 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 } from "uuid"
 import axios from "axios";
+import io from "socket.io-client";
 import "./App.css";
+
+const socket = io("http://localhost:3001");
 
 const Conference = () => {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false);
   const [conferenceName, setConferenceName] = useState('');
-  const [conferences, setConferences] = useState([]);
+  const [conferences, setConferences] = useState({});
   const [status, setStatus] = useState('')
 
+
+
   useEffect(() => {
-    fetchConferences();
+    socket.on("conferences", (data) => {
+      setConferences(data);
+    });
+    socket.on("new-conference", (data) => {
+      setConferences((prevConferences) => ({
+        ...prevConferences,
+        [data.roomID]: data,
+      }));
+    });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("conferenceName", conferenceName);
-  }, [conferenceName]);
-
-  const fetchConferences = async () => {
-    try {
-      const response = await axios.get("/api/conferences");
-      setConferences(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleJoinConference = (roomID) => {
+    navigate(`/room/${roomID}`);
   };
+
+  
 
   const handleCreateConference = () => {
     setShowModal(true);
   };
 
-  const handleModalSubmit = async (e) => {
+  const handleModalSubmit = () => {
     const roomID = v4();
-    navigate(`/room/${roomID}`)
-    localStorage.setItem("status", status)
-    e.preventDefault();
-    try {
-      const response = await axios.post("/api/conferences", {
-        name: conferenceName,
-        //admin: username, // replace with actual admin name
-      });
-      setConferences([...conferences, response.data]);
-      setShowModal(false);
-      setConferenceName("");
-    } catch (error) {
-      console.error(error);
-    }
+    // Отправляем запрос на сервер для создания комнаты
+    fetch("http://localhost:3001/create-conference", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ roomID, conferenceName }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        navigate(`/room/${roomID}`);
+      })
+      .catch((error) => console.error(error));
   };
+
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -60,12 +64,17 @@ const Conference = () => {
         <div className="header-text">Конференции</div>
       </div>
       <div className="conference-catalog">
-        {conferences.map((conference, index) => (
-          <div key={index} className="conference-box">
+        {Object.keys(conferences).map((roomID) => (
+          <div key={roomID} className="conference-box">
             <img className="user-image" src={""} alt="userImage" />
-            <div className="conference-name">{conference.name}</div>
-            <div className="conference-admin">Проводит: {conference.admin}</div>
-            <div className="join-btn" onClick={""}>
+            <div className="conference-name">{conferences[roomID].name}</div>
+            <div className="conference-admin">
+              Проводит: {conferences[roomID].admin}
+            </div>
+            <div
+              className="join-btn"
+              onClick={() => handleJoinConference(roomID)}
+            >
               <div className="join-text">Войти</div>
             </div>
           </div>
@@ -111,7 +120,6 @@ const Conference = () => {
                   </div>
                 </div>
               )}
-              
             </form>
             <div className="modal-close" onClick={handleModalClose}>
               ×
