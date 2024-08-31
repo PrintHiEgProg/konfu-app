@@ -43,11 +43,14 @@ const Conference = () => {
   const handleModalSubmit = () => {
     const roomID = v4();
     // Отправляем запрос на сервер для создания комнаты
-    fetch("http://localhost:3001/create-conference", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomID, conferenceName }),
-    })
+    fetch(
+      "http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001/create-conference",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomID, conferenceName }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         navigate(`/room/${roomID}`);

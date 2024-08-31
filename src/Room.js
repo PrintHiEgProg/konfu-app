@@ -62,9 +62,12 @@ const Room = () => {
     const handleLeaveConference = (roomID) => {
       if (typeUser) {
         // Отправляем запрос на сервер для удаления конференции
-        fetch(`http://localhost:3001/delete-conference/${roomID}`, {
-          method: "DELETE",
-        })
+        fetch(
+          `http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001/delete-conference/${roomID}`,
+          {
+            method: "DELETE",
+          }
+        )
           .then((response) => response.json())
           .then((data) => {
             // Удаляем конференцию из списка
@@ -73,7 +76,7 @@ const Room = () => {
               delete newConferences[roomID];
               return newConferences;
             });
-              navigate("/")
+            navigate("/");
           })
           .catch((error) => console.error(error));
       } else {
