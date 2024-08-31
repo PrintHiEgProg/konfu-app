@@ -4,7 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import "./App.css";
 
-const socket = io("http://localhost:3001"); 
+const socket = io(
+  "https://conference-app-backend-qp3tstloy-printhiegprogs-projects.vercel.app:3001"
+); 
 
 const Room = () => {
     const [conferences, setConferences] = useState({});

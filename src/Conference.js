@@ -5,7 +5,9 @@ import axios from "axios";
 import io from "socket.io-client";
 import "./App.css";
 
-const socket = io("http://localhost:3001");
+const socket = io(
+  "https://conference-app-backend-qp3tstloy-printhiegprogs-projects.vercel.app:3001"
+);
 
 const Conference = () => {
   const navigate = useNavigate()
