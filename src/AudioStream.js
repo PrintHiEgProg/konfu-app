@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 
-const socket = io("printhiegprog-conference-app-backend-b2bd.twc1.net");
+const socket = io(
+  "http://printhiegprog-conference-app-backend-b2bd.twc1.net:3001"
+);
 
 const AudioStream = () => {
   const { roomID } = useParams();
