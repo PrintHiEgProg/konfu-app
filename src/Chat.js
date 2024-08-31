@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3001"); 
+const socket = io("printhiegprog-conference-app-backend-b2bd.twc1.net"); 
 
 const Chat = () => {
   const { roomID } = useParams();
