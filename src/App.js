@@ -21,7 +21,7 @@ import AudioStream from "./AudioStream.js";
 import socketIO from "socket.io-client";
 
 const socket = socketIO.connect(
-  "https://printhiegprog-conference-app-backend-b2bd.twc1.net"
+  "printhiegprog-knofu-app-backend-46b9.twc1.net"
 );
 
 function App() {
