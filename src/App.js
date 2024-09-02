@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,49 +25,97 @@ const socket = socketIO.connect(
 );
 
 function App() {
-  
-  const [notJoinApp, setNotJoinApp] = useState(true) 
-  const [goRegistration, setGoRegistration] = useState(false)
-  
-  const [username, setUsername] = useState(() => {
-    const savedUsername = localStorage.getItem("username");
-    return savedUsername !== null ? savedUsername : "Неизвестный пользователь";
-  });
-  const [typeUser, setTypeUser] = useState(() => {
-    const savedUsername = localStorage.getItem("typeUser");
-    return savedUsername !== null ? savedUsername : false;
-  });
-  
-  
+  const localVideoRef = useRef(null);
+  const remoteVideoRef = useRef(null);
+  const [peerConnection, setPeerConnection] = useState(null);
+  const [localStream, setLocalStream] = useState(null);
+
+  const configuration = {
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  };
 
   useEffect(() => {
-    localStorage.setItem("username", username)
-    localStorage.setItem("typeUser", typeUser)
-  }, [username])
+    socket.on("offer", async (offer) => {
+      if (!peerConnection) {
+        const pc = new RTCPeerConnection(configuration);
+        setPeerConnection(pc);
+        localStream
+          .getTracks()
+          .forEach((track) => pc.addTrack(track, localStream));
+
+        pc.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.emit("ice-candidate", event.candidate);
+          }
+        };
+
+        pc.ontrack = (event) => {
+          remoteVideoRef.current.srcObject = event.streams[0];
+        };
+
+        await pc.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        socket.emit("answer", answer);
+      }
+    });
+
+    socket.on("answer", (answer) => {
+      peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    });
+
+    socket.on("ice-candidate", (candidate) => {
+      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    });
+
+    return () => {
+      socket.off("offer");
+      socket.off("answer");
+      socket.off("ice-candidate");
+    };
+  }, [peerConnection, localStream]);
+
+  const startCall = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    setLocalStream(stream);
+    localVideoRef.current.srcObject = stream;
+
+    const pc = new RTCPeerConnection(configuration);
+    setPeerConnection(pc);
+
+    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("ice-candidate", event.candidate);
+      }
+    };
+
+    pc.ontrack = (event) => {
+      remoteVideoRef.current.srcObject = event.streams[0];
+    };
+
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    socket.emit("offer", offer);
+  };
 
   return (
-    <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/room-audio/:roomId" element={<AudioStream />} />
-          <Route path="/room/:roomID" element={<Room />} />
-          <Route exact path="/" element={<Conference />} />
-          <Route path="/articles" element={<Article />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound404 />} />
-        </Routes>
-        <AppContent />
-      </Router>
+    <div>
+      <h2>WebRTC Video Chat</h2>
+      <video ref={localVideoRef} autoPlay muted style={{ width: "300px" }} />
+      <video ref={remoteVideoRef} autoPlay style={{ width: "300px" }} />
+      <button onClick={startCall}>Start Call</button>
     </div>
   );
 }
 
+
+
 export default App;
 
-function AppContent() {
-  const location = useLocation();
-  return <div>{!location.pathname.startsWith("/room/") && <Navbar />}</div>;
-}
 
 
