@@ -81,7 +81,30 @@ function WebcamFeed() {
         setRemoteStream(true)
     }
 
+useEffect(() => {
+  if (stream) {
+    // Добавляем локальный поток к peer connection
+    stream.getTracks().forEach((track) => {
+      pc.addTrack(track, stream);
+    });
 
+    // Создаем offer и отправляем его на сервер
+    pc.createOffer()
+      .then((offer) => {
+        return pc.setLocalDescription(
+          new RTCSessionDescription({ type: "offer", sdp: offer })
+        );
+      })
+      .then(() => {
+        // Отправляем offer на сервер
+        fetch("https://printhiegprog-knofu-app-backend-46b9.twc1.net/offer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pc.localDescription),
+        });
+      });
+  }
+}, [stream]);
   return (
       <div>
           <button onClick={TypeUserAdmin}>Стать админом</button>
