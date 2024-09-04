@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { useRef, useEffect, useState } from "react";
 import { FiVideo, FiVideoOff, FiMic, FiMicOff } from "react-icons/fi";
+import "./App.css"
 
 const configuration = {
   iceServers: [
@@ -21,6 +22,10 @@ let hangupButton;
 let muteAudButton;
 let remoteVideo;
 let localVideo;
+
+
+// ...
+
 socket.on("message", (e) => {
   if (!localStream) {
     console.log("not ready yet");
@@ -54,6 +59,8 @@ socket.on("message", (e) => {
   }
 });
 
+// ...
+
 async function makeCall() {
   try {
     pc = new RTCPeerConnection(configuration);
@@ -67,17 +74,16 @@ async function makeCall() {
         message.sdpMid = e.candidate.sdpMid;
         message.sdpMLineIndex = e.candidate.sdpMLineIndex;
       }
-      socket.emit("message", message);
+      // Send the room ID along with the message
+      socket.emit("message", { type: "candidate", roomId: socket.id, ...message });
     };
-    pc.ontrack = (e) => (remoteVideo.current.srcObject = e.streams[0]);
-    localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
-    const offer = await pc.createOffer();
-    socket.emit("message", { type: "offer", sdp: offer.sdp });
-    await pc.setLocalDescription(offer);
+    // ...
   } catch (e) {
     console.log(e);
   }
 }
+
+// ...
 
 async function handleOffer(offer) {
   if (pc) {
